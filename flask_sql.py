@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from http import HTTPStatus
-
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -39,7 +39,7 @@ def get_students():
 
 @app.route("/api/students/<int:student_id>", methods=["GET"])
 def get_student(student_id):
-    student = Student.query.get(student_id)
+    student = db.session.get(Student, student_id)
     if not student:
         return jsonify(
             {
@@ -77,13 +77,15 @@ def create_student():
                 }
             ), HTTPStatus.BAD_REQUEST
 
+    birthday = datetime.strptime(data['birthday'], '%Y-%m-%d').date()
+
     new_student = Student(
         student_number=data['student_number'],
         first_name=data['first_name'],
         last_name=data['last_name'],
         middle_name=data.get('middle_name', ''), 
         sex=data['sex'], 
-        birthday=data['birthday']
+        birthday=birthday
     )
 
     db.session.add(new_student)
@@ -98,7 +100,7 @@ def create_student():
 
 @app.route("/api/students/<int:student_id>", methods=["PUT"])
 def update_student(student_id):
-    student = Student.query.get(student_id)
+    student = db.session.get(Student, student_id)
 
     if student is None: 
         return jsonify(
@@ -122,7 +124,10 @@ def update_student(student_id):
 
     for key in update_fields: 
         if key in data: 
-            setattr(student, key, data[key])
+            if key == 'birthday':
+                student.birthday = datetime.strptime(data[key], '%Y-%m-%d').date()
+            else:
+                setattr(student, key, data[key])
     
     db.session.commit()
 
@@ -135,7 +140,7 @@ def update_student(student_id):
 
 @app.route("/api/students/<int:student_id>", methods=["DELETE"])
 def delete_student(student_id):
-    student = Student.query.get(student_id)
+    student = db.session.get(Student, student_id)
 
     if student is None: 
         return jsonify(
@@ -165,7 +170,7 @@ def not_found(error):
     ), HTTPStatus.NOT_FOUND
 
 @app.errorhandler(500)
-def not_found(error):
+def internal_error(error):
     return jsonify(
         {
             "success": False,
