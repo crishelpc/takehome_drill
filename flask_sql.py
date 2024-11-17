@@ -55,6 +55,47 @@ def get_student(student_id):
         }
     ), HTTPStatus.OK
 
+@app.route("/api/students", methods=["POST"])
+def create_student():
+    if not request.is_json:
+        return jsonify(
+            {
+                "success": False,
+                "error": "Content-type must be application/json"
+            }
+        ), HTTPStatus.BAD_REQUEST
+    
+    data = request.get_json()
+    required_fields = ["student_number", "first_name", "last_name", "sex", "birthday"]
+
+    for field in required_fields:
+        if field not in data:
+            return jsonify(
+                {
+                    "success": False,
+                    "error": f"Missing required field: {field}",
+                }
+            ), HTTPStatus.BAD_REQUEST
+
+    new_student = Student(
+        student_number=data['student_number'],
+        first_name=data['first_name'],
+        last_name=data['last_name'],
+        middle_name=data.get('middle_name', ''), 
+        sex=data['sex'], 
+        birthday=data['birthday']
+    )
+
+    db.session.add(new_student)
+    db.session.commit()
+
+    return jsonify(
+        {
+            "success": True,
+            "data": new_student.to_dict(),
+        }
+    ), HTTPStatus.CREATED
+
 
 if __name__ == "__main__":
     app.run(debug=True)
