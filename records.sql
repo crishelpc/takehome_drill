@@ -32,7 +32,7 @@ CREATE TABLE `students` (
   `birthday` date NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `student_number` (`student_number`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,13 +41,9 @@ CREATE TABLE `students` (
 
 LOCK TABLES `students` WRITE;
 /*!40000 ALTER TABLE `students` DISABLE KEYS */;
-INSERT INTO `students` VALUES (3,'2022-8-0108','Crishel','Ponce','Baluarte','Female','2003-11-21'),(4,'2022-8-2114','Jamaica','Magbanua','Cruz','Female','2004-08-23');
+INSERT INTO `students` VALUES (1,'2022-8-0108','Crishel','Ponce','Baluarte','Female','2003-11-21'),(2,'2022-8-1108','Jamaica','Magbanua','Cruz','Female','2004-08-23');
 /*!40000 ALTER TABLE `students` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping routines for database 'records'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -58,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-17 13:38:10
+-- Dump completed on 2024-11-17 22:18:20
