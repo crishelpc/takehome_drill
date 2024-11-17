@@ -155,6 +155,23 @@ def delete_student(student_id):
         }
     ), HTTPStatus.OK
 
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify(
+        {
+            "success": False,
+            "error": "Resource not found"
+        }
+    ), HTTPStatus.NOT_FOUND
+
+@app.errorhandler(500)
+def not_found(error):
+    return jsonify(
+        {
+            "success": False,
+            "error": "Internal Server Error"
+        }
+    ), HTTPStatus.INTERNAL_SERVER_ERROR
 
 if __name__ == "__main__":
     app.run(debug=True)
