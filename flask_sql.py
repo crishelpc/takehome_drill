@@ -133,6 +133,28 @@ def update_student(student_id):
         }
     ), HTTPStatus.OK
 
+@app.route("/api/students/<int:student_id>", methods=["DELETE"])
+def delete_student(student_id):
+    student = Student.query.get(student_id)
+
+    if student is None: 
+        return jsonify(
+            {
+                "success": False, 
+                "error": "Student not found."
+            }
+        ), HTTPStatus.NOT_FOUND
+    
+    db.session.delete(student)
+    db.session.commit()
+
+    return jsonify(
+        {
+            "success": True,
+            "data": "Student deleted successfully."
+        }
+    ), HTTPStatus.OK
+
 
 if __name__ == "__main__":
     app.run(debug=True)
