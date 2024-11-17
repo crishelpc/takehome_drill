@@ -37,6 +37,23 @@ def get_students():
     students = Student.query.all()
     return jsonify({"success": True, "data": [student.to_dict() for student in students]}), HTTPStatus.OK
 
+@app.route("/api/students/<int:student_id>", methods=["GET"])
+def get_student(student_id):
+    student = Student.query.get(student_id)
+    if not student:
+        return jsonify(
+            {
+                "success": False, 
+                "error": "Student not found"
+            }
+        ), HTTPStatus.NOT_FOUND
+    
+    return jsonify(
+        {
+            "success": True, 
+            "data": student.to_dict()
+        }
+    ), HTTPStatus.OK
 
 
 if __name__ == "__main__":
