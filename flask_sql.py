@@ -96,6 +96,43 @@ def create_student():
         }
     ), HTTPStatus.CREATED
 
+@app.route("/api/students/<int:student_id>", methods=["PUT"])
+def update_student(student_id):
+    student = Student.query.get(student_id)
+
+    if student is None: 
+        return jsonify(
+            {
+                "success": False,
+                "error":"Student not found"
+            }
+        ), HTTPStatus.NOT_FOUND
+    
+    data = request.get_json()
+
+    if not data: 
+        return jsonify(
+            {
+                "sucess": False,
+                "error": "No data found. Provide data to update the student."
+            }
+        ), HTTPStatus.BAD_REQUEST
+    
+    update_fields = ["student_number", "first_name", "last_name", "middle_name", "sex", "birthday"]
+
+    for key in update_fields: 
+        if key in data: 
+            setattr(student, key, data[key])
+    
+    db.session.commit()
+
+    return jsonify(
+        {
+            "success": True,
+            "data": student.to_dict()
+        }
+    ), HTTPStatus.OK
+
 
 if __name__ == "__main__":
     app.run(debug=True)
